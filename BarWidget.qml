@@ -7,6 +7,9 @@ BarWidget {
   id: root
   moduleName: "rubichandrap.flappy"
 
+  readonly property color fg: bar ? bar.barForeground : Color.foreground
+  readonly property color cut: bar ? bar.background : Color.bar.background
+
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
 
@@ -17,9 +20,9 @@ BarWidget {
     text: ""
     labelVisible: false
     keepSpace: true
-    fixedWidth: 32
+    fixedWidth: 26
     tooltipText: "Flappy"
-    horizontalMargin: 6
+    horizontalMargin: 7.5
     onPressed: function(pressedButton) {
       if (!root.bar) return
       if (pressedButton === Qt.RightButton) return
@@ -32,73 +35,64 @@ BarWidget {
     enabled: false
 
     Item {
-      width: 22
-      height: 14
+      id: bird
+      width: 16
+      height: 12
       anchors.centerIn: parent
 
       Rectangle {
-        width: 6
-        height: 5
+        width: 5
+        height: 4
         x: 0
         y: 5
         radius: 1
-        color: Qt.darker(Color.accent, 1.25)
-        rotation: 16
+        color: root.fg
+        rotation: 18
       }
 
       Rectangle {
         id: body
-        width: 17
-        height: 13
+        width: 13
+        height: 10
         x: 2
         y: 1
         radius: height / 2
-        color: Color.accent
+        color: root.fg
       }
 
       Rectangle {
-        width: 8
+        width: 7
         height: 5
-        x: body.x + 4
-        y: body.y + 5
-        radius: height / 2
-        color: Qt.darker(Color.accent, 1.3)
-        rotation: -12
+        x: body.x + 3
+        y: body.y + 4
+        radius: 2
+        color: root.cut
+        rotation: -18
       }
 
       Rectangle {
-        id: eye
-        width: 5
-        height: 5
-        radius: width / 2
-        x: body.x + 11
-        y: body.y + 2
-        color: "#ffffff"
-      }
-
-      Rectangle {
-        width: 2
-        height: 2
-        radius: 1
-        x: eye.x + 2.5
-        y: eye.y + 2
-        color: "#1b1b1b"
+        width: 3
+        height: 3
+        radius: 1.5
+        x: body.x + 8
+        y: body.y + 3
+        color: root.cut
       }
 
       Shape {
         width: 5
-        height: 7
+        height: 6
         x: body.x + body.width - 2
-        y: body.y + 4
+        y: body.y + 2.5
 
         ShapePath {
-          fillColor: Color.urgent
+          fillColor: root.fg
           strokeColor: "transparent"
           startX: 0
-          startY: 0.5
-          PathLine { x: 5; y: 3.5 }
-          PathLine { x: 0; y: 6.5 }
-          PathLine { x: 0; y: 0.5 }
+          startY: 0
+          PathLine { x: 5; y: 3 }
+          PathLine { x: 0; y: 6 }
+          PathLine { x: 0; y: 0 }
         }
       }
     }
