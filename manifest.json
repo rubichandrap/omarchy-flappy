@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "rubichandrap.flappy",
+  "name": "Flappy",
+  "version": "1.0.0",
+  "author": "rubichandrap",
+  "description": "Flappy Bird minigame overlay with high score",
+  "kinds": ["overlay", "bar-widget"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Flappy.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Flappy",
+    "description": "Launch the Flappy Bird minigame",
+    "category": "Fun",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
