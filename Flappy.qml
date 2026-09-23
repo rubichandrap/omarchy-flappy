@@ -527,47 +527,9 @@ Item {
             opacity: 0.95
 
             Rectangle {
-              id: grassBase
               anchors.left: parent.left
               anchors.right: parent.right
               anchors.top: parent.top
-              height: 11
-              color: root.grass
-
-              Rectangle {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                height: 2
-                color: Qt.darker(root.grass, 1.25)
-                opacity: 0.7
-              }
-
-              Repeater {
-                model: 26
-
-                delegate: Rectangle {
-                  required property int index
-                  readonly property int variant: index % 5
-                  width: variant === 0 ? 5 : (variant === 1 ? 3 : 2)
-                  height: variant === 0 ? 10 : (variant === 1 ? 7 : 4)
-                  radius: width / 2
-                  x: root.wrapOffset(index * 18 - root.bgOffset * 0.95, root.gameW + 20) - 10
-                  anchors.bottom: parent.bottom
-                  anchors.bottomMargin: variant === 4 ? 1 : 0
-                  color: variant % 2 === 0
-                    ? Qt.lighter(root.grass, 1.18)
-                    : Qt.darker(root.grass, variant === 0 ? 1.05 : 1.2)
-                  opacity: variant === 2 ? 0.55 : 0.9
-                  rotation: (index % 2 === 0 ? -1 : 1) * (4 + (index % 3) * 5)
-                }
-              }
-            }
-
-            Rectangle {
-              anchors.left: parent.left
-              anchors.right: parent.right
-              anchors.top: grassBase.bottom
               height: 2
               color: root.foreground
               opacity: 0.1
@@ -590,7 +552,58 @@ Item {
           }
 
           Item {
+            id: tallGrass
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: ground.top
+            height: 44
+            z: 2
+
+            Rectangle {
+              id: grassLip
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.bottom: parent.bottom
+              height: 10
+              color: root.grass
+
+              Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 2
+                color: Qt.darker(root.grass, 1.2)
+                opacity: 0.55
+              }
+            }
+
+            Repeater {
+              model: 48
+
+              delegate: Rectangle {
+                required property int index
+                readonly property int variant: index % 6
+                readonly property bool big: variant === 0 || variant === 1
+                readonly property bool mid: variant === 2 || variant === 3
+
+                width: big ? 5 : (mid ? 3 : 2)
+                height: big ? 34 + (index % 3) * 3 : (mid ? 20 + (index % 4) * 2 : 11 + (index % 3) * 2)
+                radius: width / 2
+                x: root.wrapOffset(index * 11 - root.bgOffset * 0.95, root.gameW + 16) - 8
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: big ? 6 : (mid ? 3 : 0)
+                color: big
+                  ? Qt.darker(root.grass, 1.08)
+                  : (mid ? root.grass : Qt.lighter(root.grass, 1.2))
+                opacity: big ? 0.95 : (mid ? 0.9 : 0.75)
+                rotation: (index % 2 === 0 ? -1 : 1) * (3 + (index % 5) * 3)
+              }
+            }
+          }
+
+          Item {
             id: bird
+            z: 3
             x: root.birdX - width / 2
             y: root.birdY - height / 2
             width: 38
@@ -763,16 +776,55 @@ Item {
         }
 
         Item {
+          id: footerWrap
           width: parent.width
-          height: footerLabel.implicitHeight + 6
+          height: footerLabel.implicitHeight + 28
+          clip: true
+
+          Item {
+            id: footerGrass
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 22
+            opacity: 0.85
+
+            Rectangle {
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.bottom: parent.bottom
+              height: 7
+              color: root.grass
+              radius: 2
+            }
+
+            Repeater {
+              model: 36
+
+              delegate: Rectangle {
+                required property int index
+                readonly property int variant: index % 5
+                readonly property bool big: variant === 0
+                width: big ? 4 : (variant === 1 ? 3 : 2)
+                height: big ? 16 + (index % 3) * 2 : (variant === 1 ? 10 : 6)
+                radius: width / 2
+                x: root.wrapOffset(index * 14 - root.bgOffset * 0.4, root.gameW + 12) - 6
+                anchors.bottom: parent.bottom
+                color: big ? Qt.darker(root.grass, 1.1) : (variant === 1 ? root.grass : Qt.lighter(root.grass, 1.15))
+                opacity: 0.9
+                rotation: (index % 2 === 0 ? -1 : 1) * (4 + (index % 4) * 3)
+              }
+            }
+          }
 
           Text {
             id: footerLabel
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 6
             text: "Space / click flap · R restart · Esc close"
             color: root.foreground
-            opacity: 0.55
+            opacity: 0.7
             font.family: root.fontFamily
             font.pixelSize: Style.font.caption
           }
