@@ -221,7 +221,7 @@ Item {
     BorderSurface {
       id: card
       width: root.gameW + 32
-      height: root.gameH + 72
+      height: root.gameH + 96
       anchors.centerIn: parent
       radius: root.cornerRadius
       color: root.background
@@ -237,7 +237,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: card.contentTopInset + 8
         anchors.rightMargin: card.contentRightInset
-        anchors.bottomMargin: card.contentBottomInset
+        anchors.bottomMargin: card.contentBottomInset + 4
         anchors.leftMargin: card.contentLeftInset
         spacing: 10
 
@@ -515,13 +515,20 @@ Item {
           }
         }
 
-        Text {
-          anchors.horizontalCenter: parent.horizontalCenter
-          text: "Space / click flap · R restart · Esc close"
-          color: root.foreground
-          opacity: 0.55
-          font.family: root.fontFamily
-          font.pixelSize: Style.font.caption
+        Item {
+          width: parent.width
+          height: footerLabel.implicitHeight + 6
+
+          Text {
+            id: footerLabel
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            text: "Space / click flap · R restart · Esc close"
+            color: root.foreground
+            opacity: 0.55
+            font.family: root.fontFamily
+            font.pixelSize: Style.font.caption
+          }
         }
       }
     }
