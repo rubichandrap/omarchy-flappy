@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
+import QtQuick.Shapes
 import qs.Commons
 import qs.Ui
 
@@ -343,43 +344,121 @@ Item {
 
           Item {
             id: bird
-            x: root.birdX - root.birdR
-            y: root.birdY - root.birdR
-            width: root.birdR * 2
-            height: root.birdR * 2
+            x: root.birdX - width / 2
+            y: root.birdY - height / 2
+            width: 38
+            height: 30
             rotation: Math.max(-28, Math.min(72, root.birdV / 9))
 
+            readonly property real wingAngle: root.phase === root.phasePlaying
+              ? Math.max(-55, Math.min(40, root.birdV / 7))
+              : Math.sin(root.elapsed * 14) * 30 - 5
+
             Rectangle {
-              anchors.fill: parent
-              radius: width / 2
+              id: tail
+              width: 12
+              height: 9
+              x: -1
+              y: 9
+              radius: 2
+              color: Qt.darker(root.accent, 1.25)
+              rotation: 18
+            }
+
+            Rectangle {
+              id: body
+              width: 34
+              height: 26
+              x: 3
+              y: 2
+              radius: height / 2
               color: root.accent
             }
 
             Rectangle {
-              width: 8
-              height: 6
-              radius: 2
-              x: parent.width - 7
-              y: 7
-              color: root.urgent
+              id: belly
+              width: 18
+              height: 12
+              x: body.x + 12
+              y: body.y + 13
+              radius: height / 2
+              color: Qt.lighter(root.accent, 1.35)
+              opacity: 0.55
+            }
+
+            Item {
+              id: wingPivot
+              width: 18
+              height: 13
+              x: body.x + 4
+              y: body.y + 7
+              transformOrigin: Item.Left
+              rotation: bird.wingAngle
+
+              Rectangle {
+                anchors.fill: parent
+                radius: height / 2
+                color: Qt.darker(root.accent, 1.3)
+                opacity: 0.95
+              }
+
+              Rectangle {
+                width: 12
+                height: 7
+                x: 3
+                y: 3
+                radius: height / 2
+                color: Qt.lighter(root.accent, 1.2)
+                opacity: 0.35
+              }
             }
 
             Rectangle {
-              width: 7
-              height: 7
-              radius: 4
-              x: parent.width - 12
-              y: 5
-              color: root.background
+              id: eyeWhite
+              width: 11
+              height: 11
+              radius: width / 2
+              x: body.x + 20
+              y: body.y + 3
+              color: "#ffffff"
             }
 
             Rectangle {
-              width: 7
-              height: 3
+              id: eyePupil
+              width: 5
+              height: 5
+              radius: width / 2
+              x: eyeWhite.x + 5
+              y: eyeWhite.y + 4
+              color: "#1b1b1b"
+            }
+
+            Rectangle {
+              width: 2
+              height: 2
               radius: 1
-              x: parent.width - 10
-              y: 6
-              color: Color.foreground
+              x: eyeWhite.x + 7
+              y: eyeWhite.y + 3
+              color: "#ffffff"
+              opacity: 0.9
+            }
+
+            Shape {
+              id: beak
+              width: 13
+              height: 14
+              x: body.x + body.width - 4
+              y: body.y + 7
+
+              ShapePath {
+                fillColor: root.urgent
+                strokeColor: "transparent"
+                startX: 0
+                startY: 1
+                PathLine { x: beak.width; y: beak.height / 2 }
+                PathLine { x: 0; y: beak.height - 1 }
+                PathLine { x: 0; y: 1 }
+              }
             }
           }
 
