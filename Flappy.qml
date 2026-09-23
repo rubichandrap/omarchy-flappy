@@ -25,6 +25,7 @@ Item {
   property int score: 0
   property int best: 0
   property bool isNewBest: false
+  property real bgOffset: 0
 
   readonly property real gameW: 420
   readonly property real gameH: 640
@@ -48,6 +49,10 @@ Item {
   readonly property color urgent: Color.urgent
   readonly property int cornerRadius: Style.cornerRadius
   readonly property string fontFamily: Style.font.menuFamily
+
+  function wrapOffset(value, span) {
+    return ((value % span) + span) % span
+  }
 
   ListModel { id: pipeModel }
 
@@ -90,6 +95,7 @@ Item {
     root.birdY = root.gameH * 0.4
     root.birdV = 0
     root.elapsed = 0
+    root.bgOffset = 0
     pipeModel.clear()
   }
 
@@ -174,6 +180,7 @@ Item {
     repeat: true
     running: root.opened
     onTriggered: {
+      root.bgOffset += root.dt * (root.phase === root.phasePlaying ? root.pipeSpeed : 28)
       if (root.phase === root.phaseReady) {
         root.elapsed += root.dt
         root.birdY = root.gameH * 0.4 + Math.sin(root.elapsed * 3.2) * 9
@@ -268,26 +275,181 @@ Item {
           }
         }
 
-        Item {
-          id: board
-          width: root.gameW
-          height: root.gameH
-          anchors.horizontalCenter: parent.horizontalCenter
-          clip: true
+          Item {
+            id: board
+            width: root.gameW
+            height: root.gameH
+            anchors.horizontalCenter: parent.horizontalCenter
+            clip: true
 
-          Rectangle {
-            anchors.fill: parent
-            radius: root.cornerRadius
-            color: Color.background
+            Rectangle {
+              id: sky
+              anchors.fill: parent
+              radius: root.cornerRadius
 
-            Gradient {
-              GradientStop { position: 0.0; color: Qt.darker(Color.background, 1.25) }
-              GradientStop { position: 1.0; color: Color.background }
+              Gradient {
+                GradientStop {
+                  position: 0.0
+                  color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.14)
+                }
+                GradientStop { position: 0.45; color: Color.background }
+                GradientStop {
+                  position: 1.0
+                  color: Qt.darker(Color.background, 1.2)
+                }
+              }
             }
-          }
 
-          Repeater {
-            model: pipeModel
+            Rectangle {
+              width: 180
+              height: 180
+              radius: width / 2
+              x: root.gameW - 140
+              y: -50
+              color: root.accent
+              opacity: 0.07
+            }
+
+            Rectangle {
+              width: 90
+              height: 90
+              radius: width / 2
+              x: root.gameW - 105
+              y: -8
+              color: root.accent
+              opacity: 0.1
+            }
+
+            Repeater {
+              model: 4
+
+              delegate: Item {
+                id: cloud
+                required property int index
+                readonly property real speed: 0.22 + index * 0.04
+                readonly property real baseX: 40 + index * 118
+                readonly property real baseY: 48 + (index % 3) * 56
+                readonly property real span: root.gameW + 90
+
+                x: root.wrapOffset(baseX - root.bgOffset * speed, span) - 70
+                y: baseY
+                width: 70
+                height: 24
+                opacity: 0.1 + (index % 2) * 0.04
+
+                Rectangle {
+                  width: 40
+                  height: 20
+                  x: 14
+                  y: 4
+                  radius: 10
+                  color: root.foreground
+                }
+                Rectangle {
+                  width: 28
+                  height: 24
+                  x: 20
+                  y: 0
+                  radius: 12
+                  color: root.foreground
+                }
+                Rectangle {
+                  width: 24
+                  height: 16
+                  x: 4
+                  y: 8
+                  radius: 8
+                  color: root.foreground
+                }
+              }
+            }
+
+            Item {
+              id: farHills
+              x: root.wrapOffset(-root.bgOffset * 0.18, 280) - 140
+              width: 560
+              height: 120
+              anchors.bottom: ground.top
+              opacity: 0.12
+
+              Rectangle {
+                width: 170
+                height: 90
+                x: 0
+                y: 30
+                radius: 85
+                color: root.accent
+              }
+              Rectangle {
+                width: 200
+                height: 110
+                x: 130
+                y: 10
+                radius: 100
+                color: root.accent
+              }
+              Rectangle {
+                width: 160
+                height: 80
+                x: 280
+                y: 40
+                radius: 80
+                color: root.accent
+              }
+              Rectangle {
+                width: 210
+                height: 100
+                x: 380
+                y: 20
+                radius: 105
+                color: root.accent
+              }
+            }
+
+            Item {
+              id: nearHills
+              x: root.wrapOffset(-root.bgOffset * 0.35, 320) - 160
+              width: 640
+              height: 70
+              anchors.bottom: ground.top
+              opacity: 0.16
+
+              Rectangle {
+                width: 150
+                height: 55
+                x: 10
+                y: 15
+                radius: 75
+                color: Color.muted
+              }
+              Rectangle {
+                width: 190
+                height: 68
+                x: 120
+                y: 2
+                radius: 95
+                color: Color.muted
+              }
+              Rectangle {
+                width: 170
+                height: 50
+                x: 260
+                y: 20
+                radius: 85
+                color: Color.muted
+              }
+              Rectangle {
+                width: 200
+                height: 62
+                x: 390
+                y: 8
+                radius: 100
+                color: Color.muted
+              }
+            }
+
+            Repeater {
+              model: pipeModel
 
             delegate: Item {
               id: pipeItem
@@ -334,12 +496,37 @@ Item {
           }
 
           Rectangle {
+            id: ground
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             height: root.groundH
             color: root.urgent
-            opacity: 0.85
+            opacity: 0.9
+
+            Rectangle {
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.top: parent.top
+              height: 3
+              color: root.foreground
+              opacity: 0.18
+            }
+
+            Repeater {
+              model: 14
+
+              delegate: Rectangle {
+                required property int index
+                width: 14
+                height: 3
+                radius: 1
+                x: root.wrapOffset(index * 30 - root.bgOffset * 0.9, root.gameW + 30) - 15
+                y: index % 2 === 0 ? 10 : 18
+                color: root.foreground
+                opacity: 0.14
+              }
+            }
           }
 
           Item {
