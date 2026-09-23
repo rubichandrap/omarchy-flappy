@@ -47,11 +47,21 @@ Item {
   readonly property color scrim: Color.menu.scrim
   readonly property color accent: Color.accent
   readonly property color urgent: Color.urgent
+  readonly property color grass: loadedGrass.length > 0 ? loadedGrass : "#6aaa55"
+  property string loadedGrass: ""
   readonly property int cornerRadius: Style.cornerRadius
   readonly property string fontFamily: Style.font.menuFamily
 
   function wrapOffset(value, span) {
     return ((value % span) + span) % span
+  }
+
+  FileView {
+    path: Quickshell.env("HOME") + "/.local/state/omarchy/current/theme/colors.toml"
+    onLoaded: {
+      var match = String(text() || "").match(/^\s*green\s*=\s*["']?(#[0-9A-Fa-f]{6})/m)
+      root.loadedGrass = match ? match[1] : ""
+    }
   }
 
   ListModel { id: pipeModel }
@@ -513,15 +523,49 @@ Item {
             anchors.bottom: parent.bottom
             height: root.groundH
             color: root.urgent
-            opacity: 0.9
+            opacity: 0.95
+
+            Rectangle {
+              id: grassBase
+              anchors.left: parent.left
+              anchors.right: parent.right
+              anchors.top: parent.top
+              height: 11
+              color: root.grass
+
+              Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 2
+                color: Qt.darker(root.grass, 1.25)
+                opacity: 0.7
+              }
+
+              Repeater {
+                model: 22
+
+                delegate: Rectangle {
+                  required property int index
+                  width: 3
+                  height: index % 3 === 0 ? 8 : 6
+                  radius: 1.5
+                  x: root.wrapOffset(index * 22 - root.bgOffset * 0.95, root.gameW + 24) - 12
+                  anchors.bottom: parent.bottom
+                  color: index % 2 === 0 ? Qt.lighter(root.grass, 1.15) : Qt.darker(root.grass, 1.1)
+                  opacity: 0.85
+                  rotation: index % 2 === 0 ? -8 : 6
+                }
+              }
+            }
 
             Rectangle {
               anchors.left: parent.left
               anchors.right: parent.right
-              anchors.top: parent.top
-              height: 3
+              anchors.top: grassBase.bottom
+              height: 2
               color: root.foreground
-              opacity: 0.18
+              opacity: 0.1
             }
 
             Repeater {
@@ -533,7 +577,7 @@ Item {
                 height: 3
                 radius: 1
                 x: root.wrapOffset(index * 30 - root.bgOffset * 0.9, root.gameW + 30) - 15
-                y: index % 2 === 0 ? 10 : 18
+                y: 16
                 color: root.foreground
                 opacity: 0.14
               }
