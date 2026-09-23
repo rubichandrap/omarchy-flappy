@@ -286,18 +286,29 @@ Item {
               id: sky
               anchors.fill: parent
               radius: root.cornerRadius
+              color: Color.background
 
               Gradient {
                 GradientStop {
                   position: 0.0
-                  color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.14)
+                  color: Qt.darker(Color.background, 1.12)
                 }
-                GradientStop { position: 0.45; color: Color.background }
+                GradientStop {
+                  position: 0.5
+                  color: Color.background
+                }
                 GradientStop {
                   position: 1.0
-                  color: Qt.darker(Color.background, 1.2)
+                  color: Qt.lighter(Color.background, 1.06)
                 }
               }
+            }
+
+            Rectangle {
+              anchors.fill: parent
+              radius: root.cornerRadius
+              color: root.accent
+              opacity: 0.06
             }
 
             Rectangle {
