@@ -190,6 +190,7 @@ Item {
     repeat: true
     running: root.opened
     onTriggered: {
+      if (root.phase === root.phaseDead) return
       root.bgOffset += root.dt * (root.phase === root.phasePlaying ? root.pipeSpeed : 28)
       if (root.phase === root.phaseReady) {
         root.elapsed += root.dt
@@ -543,18 +544,22 @@ Item {
               }
 
               Repeater {
-                model: 22
+                model: 26
 
                 delegate: Rectangle {
                   required property int index
-                  width: 3
-                  height: index % 3 === 0 ? 8 : 6
-                  radius: 1.5
-                  x: root.wrapOffset(index * 22 - root.bgOffset * 0.95, root.gameW + 24) - 12
+                  readonly property int variant: index % 5
+                  width: variant === 0 ? 5 : (variant === 1 ? 3 : 2)
+                  height: variant === 0 ? 10 : (variant === 1 ? 7 : 4)
+                  radius: width / 2
+                  x: root.wrapOffset(index * 18 - root.bgOffset * 0.95, root.gameW + 20) - 10
                   anchors.bottom: parent.bottom
-                  color: index % 2 === 0 ? Qt.lighter(root.grass, 1.15) : Qt.darker(root.grass, 1.1)
-                  opacity: 0.85
-                  rotation: index % 2 === 0 ? -8 : 6
+                  anchors.bottomMargin: variant === 4 ? 1 : 0
+                  color: variant % 2 === 0
+                    ? Qt.lighter(root.grass, 1.18)
+                    : Qt.darker(root.grass, variant === 0 ? 1.05 : 1.2)
+                  opacity: variant === 2 ? 0.55 : 0.9
+                  rotation: (index % 2 === 0 ? -1 : 1) * (4 + (index % 3) * 5)
                 }
               }
             }
