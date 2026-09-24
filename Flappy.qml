@@ -239,12 +239,13 @@ Item {
     BorderSurface {
       id: card
       width: root.gameW + 32
-      height: root.gameH + 96
+      height: root.gameH + 140
       anchors.centerIn: parent
       radius: root.cornerRadius
       color: root.background
       borderSpec: root.borderSpec
       padding: 16
+      clip: true
 
       MouseArea {
         anchors.fill: parent
@@ -255,7 +256,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: card.contentTopInset + 8
         anchors.rightMargin: card.contentRightInset
-        anchors.bottomMargin: card.contentBottomInset + 4
+        anchors.bottomMargin: card.contentBottomInset + 12
         anchors.leftMargin: card.contentLeftInset
         spacing: 10
 
@@ -778,7 +779,7 @@ Item {
         Item {
           id: footerWrap
           width: parent.width
-          height: footerLabel.implicitHeight + 28
+          height: footerLabel.implicitHeight + 30
           clip: true
 
           Item {
@@ -786,14 +787,15 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            height: 22
+            height: 16
             opacity: 0.85
+            clip: true
 
             Rectangle {
               anchors.left: parent.left
               anchors.right: parent.right
               anchors.bottom: parent.bottom
-              height: 7
+              height: 6
               color: root.grass
               radius: 2
             }
@@ -806,7 +808,7 @@ Item {
                 readonly property int variant: index % 5
                 readonly property bool big: variant === 0
                 width: big ? 4 : (variant === 1 ? 3 : 2)
-                height: big ? 16 + (index % 3) * 2 : (variant === 1 ? 10 : 6)
+                height: big ? 14 + (index % 3) * 2 : (variant === 1 ? 9 : 5)
                 radius: width / 2
                 x: root.wrapOffset(index * 14 - root.bgOffset * 0.4, root.gameW + 12) - 6
                 anchors.bottom: parent.bottom
@@ -820,8 +822,8 @@ Item {
           Text {
             id: footerLabel
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 6
+            anchors.top: parent.top
+            anchors.topMargin: 4
             text: "Space / click flap · R restart · Esc close"
             color: root.foreground
             opacity: 0.7
