@@ -20,6 +20,7 @@ BarWidget {
     text: ""
     labelVisible: false
     keepSpace: true
+    hasVisualContent: true
     fixedWidth: 26
     tooltipText: "Flappy"
     horizontalMargin: 7.5
