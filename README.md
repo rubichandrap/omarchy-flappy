@@ -1,4 +1,4 @@
-# rubichandrap.flappy
+# omarchy-flappy
 
 Flappy Bird minigame for the [Omarchy](https://omarchy.org/) shell.
 
@@ -17,7 +17,7 @@ omarchy restart shell
 Or from git:
 
 ```sh
-omarchy plugin add git@github.com:rubichandrap/rubichandrap.flappy.git --enable
+omarchy plugin add git@github.com:rubichandrap/omarchy-flappy.git --enable
 omarchy restart shell
 ```
 
