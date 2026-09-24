@@ -779,51 +779,13 @@ Item {
         Item {
           id: footerWrap
           width: parent.width
-          height: footerLabel.implicitHeight + 30
+          height: footerLabel.implicitHeight + 8
           clip: true
-
-          Item {
-            id: footerGrass
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: 16
-            opacity: 0.85
-            clip: true
-
-            Rectangle {
-              anchors.left: parent.left
-              anchors.right: parent.right
-              anchors.bottom: parent.bottom
-              height: 6
-              color: root.grass
-              radius: 2
-            }
-
-            Repeater {
-              model: 36
-
-              delegate: Rectangle {
-                required property int index
-                readonly property int variant: index % 5
-                readonly property bool big: variant === 0
-                width: big ? 4 : (variant === 1 ? 3 : 2)
-                height: big ? 14 + (index % 3) * 2 : (variant === 1 ? 9 : 5)
-                radius: width / 2
-                x: root.wrapOffset(index * 14 - root.bgOffset * 0.4, root.gameW + 12) - 6
-                anchors.bottom: parent.bottom
-                color: big ? Qt.darker(root.grass, 1.1) : (variant === 1 ? root.grass : Qt.lighter(root.grass, 1.15))
-                opacity: 0.9
-                rotation: (index % 2 === 0 ? -1 : 1) * (4 + (index % 4) * 3)
-              }
-            }
-          }
 
           Text {
             id: footerLabel
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 4
+            anchors.verticalCenter: parent.verticalCenter
             text: "Space / click flap · R restart · Esc close"
             color: root.foreground
             opacity: 0.7
