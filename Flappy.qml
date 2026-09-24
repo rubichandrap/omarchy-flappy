@@ -239,7 +239,7 @@ Item {
     BorderSurface {
       id: card
       width: root.gameW + 32
-      height: root.gameH + 120
+      height: root.gameH + 112
       anchors.centerIn: parent
       radius: root.cornerRadius
       color: root.background
@@ -256,7 +256,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: card.contentTopInset + 8
         anchors.rightMargin: card.contentRightInset
-        anchors.bottomMargin: card.contentBottomInset + 12
+        anchors.bottomMargin: card.contentBottomInset + 4
         anchors.leftMargin: card.contentLeftInset
         spacing: 10
 
